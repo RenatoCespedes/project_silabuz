@@ -1,22 +1,21 @@
 import csv
+from tkinter import S
 
 
 class Libro:
     def __init__(self):
-        self.__archivo=""
+        
         self.__id=0
         self.__titulo=""
         self.__genero=""
         self.__id_ISBN=""
         self.__editorial=""
         self.__autores=[]
-        self.lista_libros=[]
     
     #SETTER
     def set_id(self,i):
         self.__id=i
-    def set_archivo(self,y):
-        self.__archivo=y
+    
     
     def set_titulo(self,tittle):
         self.__titulo=tittle
@@ -43,23 +42,47 @@ class Libro:
     
     def get_archivo(self):
         return self.__archivo
+    def mostrar_libro(self):
+        id,tit,gen,isb,edi,auto=self.get_attributes()
+        print(f"{tit}, {gen}, {id}, {isb}, {edi}, {auto}")
     
-def leer_archivo(archivo):
     
-    with open(archivo) as f:
-            # next(f)
-        x=csv.reader(f)
-        next(x)
-        for row in x :
-            libro=Libro()
-            libro.set_archivo(archivo)
-            libro.set_id(row[0])
-            libro.set_titulo(row[1])
-            libro.set_genero(row[2])
-            libro.set_isbn(row[3])
-            libro.set_editorial(row[4])
-            libro.set_autores(row[5])
-            libro.lista_libros.append(libro)
 
+class Sistema_libros:
+    def __init__(self,lista=[]):
+        self.__archivo=""
+        self.libro=Libro()
+        self.lista_libros=lista
+    def set_list(self,libro):
+        self.lista_libros.append(libro)
+    
+    def set_archivo(self,y):
+        self.__archivo=y
+    
+    def get_archivo(self):
+        return self.__archivo
 
-leer_archivo('libro.csv')
+    def listar_libros(self):
+        print("Listado de libros")
+        for v,a in enumerate(self.lista_libros,start=1):
+            print(f"{v}->",end=" ")
+            a.mostrar_libro()
+    
+    def leer_archivo(self,name):
+        self.set_archivo(name)
+        with open(self.get_archivo()) as f:
+                # next(f)
+            x=csv.reader(f)
+            next(x)
+            for row in x :
+                self.libro.set_id(row[0])
+                self.libro.set_titulo(row[1])
+                self.libro.set_genero(row[2])
+                self.libro.set_isbn(row[3])
+                self.libro.set_editorial(row[4])
+                self.libro.set_autor(row[5])
+                self.lista_libros.append(self.libro)
+
+libro=Sistema_libros()
+libro.leer_archivo('libro.csv')
+libro.listar_libros()
